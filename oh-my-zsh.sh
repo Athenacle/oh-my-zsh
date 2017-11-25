@@ -9,11 +9,6 @@ autoload -U compaudit compinit
 
 : ${ZSH_DISABLE_COMPFIX:=true}
 
-# Set ZSH_CUSTOM to the path where your custom config files
-# and plugins exists, or else we will use the default custom/
-if [[ -z "$ZSH_CUSTOM" ]]; then
-    ZSH_CUSTOM="$ZSH/custom"
-fi
 
 # Set ZSH_CACHE_DIR to the path where cache files should be created
 # or else we will use the default cache/
@@ -25,8 +20,6 @@ fi
 # Load all of the config files in ~/oh-my-zsh that end in .zsh
 # TIP: Add files you don't want in git to .gitignore
 for config_file ($ZSH/lib/*.zsh); do
-  custom_config_file="${ZSH_CUSTOM}/lib/${config_file:t}"
-  [ -f "${custom_config_file}" ] && config_file=${custom_config_file}
   source $config_file
 done
 
@@ -40,9 +33,7 @@ is_plugin() {
 # Add all defined plugins to fpath. This must be done
 # before running compinit.
 for plugin ($plugins); do
-  if is_plugin $ZSH_CUSTOM $plugin; then
-    fpath=($ZSH_CUSTOM/plugins/$plugin $fpath)
-  elif is_plugin $ZSH $plugin; then
+  if is_plugin $ZSH $plugin; then
     fpath=($ZSH/plugins/$plugin $fpath)
   fi
 done
@@ -75,9 +66,7 @@ fi
 
 # Load all of the plugins that were defined in ~/.zshrc
 for plugin ($plugins); do
-  if [ -f $ZSH_CUSTOM/plugins/$plugin/$plugin.plugin.zsh ]; then
-    source $ZSH_CUSTOM/plugins/$plugin/$plugin.plugin.zsh
-  elif [ -f $ZSH/plugins/$plugin/$plugin.plugin.zsh ]; then
+  if [ -f $ZSH/plugins/$plugin/$plugin.plugin.zsh ]; then
     source $ZSH/plugins/$plugin/$plugin.plugin.zsh
   fi
 done
