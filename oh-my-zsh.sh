@@ -1,4 +1,3 @@
-
 # Initializes Oh My Zsh
 
 # add a function path
@@ -9,12 +8,6 @@ autoload -U compaudit compinit
 
 : ${ZSH_DISABLE_COMPFIX:=true}
 
-
-# Set ZSH_CACHE_DIR to the path where cache files should be created
-# or else we will use the default cache/
-if [[ -z "$ZSH_CACHE_DIR" ]]; then
-  ZSH_CACHE_DIR="$ZSH/cache"
-fi
 
 
 # Load all of the config files in ~/oh-my-zsh that end in .zsh
@@ -52,16 +45,15 @@ if [ -z "$ZSH_COMPDUMP" ]; then
 fi
 
 if [[ $ZSH_DISABLE_COMPFIX != true ]]; then
-  # If completion insecurities exist, warn the user without enabling completions.
+  # If completion insecurities exist, warn the user
   if ! compaudit &>/dev/null; then
-    # This function resides in the "lib/compfix.zsh" script sourced above.
     handle_completion_insecurities
-  # Else, enable and cache completions to the desired file.
-  else
-    compinit -d "${ZSH_COMPDUMP}"
   fi
-else
+  # Load only from secure directories
   compinit -i -d "${ZSH_COMPDUMP}"
+else
+  # If the user wants it, load from all found directories
+  compinit -u -d "${ZSH_COMPDUMP}"
 fi
 
 # Load all of the plugins that were defined in ~/.zshrc
